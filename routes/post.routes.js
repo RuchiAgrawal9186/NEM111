@@ -48,7 +48,7 @@ postRouter.get("/",async(req,res)=>{
    
 
 })
-postRouter.patch("/update/:id",async(req,res)=>{
+postRouter.patch("/update/:postID",async(req,res)=>{
 
     const {postID} = req.params
     const useridinUSERDOC=req.body.userID
@@ -76,7 +76,7 @@ postRouter.patch("/update/:id",async(req,res)=>{
     
 
 })
-postRouter.delete("/delete/:id",async(req,res)=>{
+postRouter.delete("/delete/:postID",async(req,res)=>{
 
     const {postID} = req.params
     const useridinUSERDOC=req.body.userID
