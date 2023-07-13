@@ -1,38 +1,35 @@
 
-const jwt = require("jsonwebtoken")
+const jwt = require("jsonwebtoken");
+const { logoutModel } = require("../models/logout.model");
 require("dotenv").config()
-const auth = (req,res,next) =>{
 
-  // 1) first get the data from the req.headers,authorization?split(" ")[1]
-    const token = req.headers.authorization?.split(" ")[1]
-
-    if(token)
-    {
-          try {
-
-            // 2) check token availbale then verify using jwt verify (token,secret key)
-            
-            const decode = jwt.verify(token,process.env.secrete)
-             if(decode)
-             {
-                req.body.userID = decode.userID
-                req.body.user=decode.user
-                next()
-             }
-             else
-             {
-                res.json({msg:"not authorize"})
-             }
-            
-          } catch (error) {
-            res.json({error:error.message})
-          }
-    }
-    else
-    {
-        res.json({msg:"please login"})
-    }
-
+const auth = async(req, res, next)=>{
+  const token=req.headers.authorization?.split(" ")[1];
+  const blacklist = await logoutModel.findOne({ token });
+  if(token){
+      if(blacklist){
+         res.send({msg: "Please Login again"})
+         return
+      }else{
+          try{
+              jwt.verify(token, process.env.secrete, (err, decoded)=>{
+                  if(decoded){
+                      req.body.userID= decoded.userID;
+                      req.body.user=decoded.user
+                      next()
+                  }else{
+                      res.send({msg:"not authorize"})
+                  }
+              })
+      
+             }catch(err){
+      res.json({msg: err.message})
+             } 
+      }
+     
+  }else{
+      res.send({msg:"Please Login"})
+  }
 }
 
 module.exports={

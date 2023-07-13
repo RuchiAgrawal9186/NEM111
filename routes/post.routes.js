@@ -12,27 +12,13 @@ postRouter.post("/add",async(req,res)=>{
 
         const post = new PostModel(req.body)
         await post.save()
-        res.json({mesg:"new post has been added",post:req.body})     
+        res.json({mesg:"new employee has been added",post:req.body})     
     } catch (error) {
         res.json({error:error.message})
     }
 
 })
 
-postRouter.post("/top",async(req,res)=>{
-
-    try {
-
-        const post = new PostModel(req.body)
-        await post.save()
-        res.json({mesg:"new post has been added",post:req.body})     
-    } catch (error) {
-        res.json({error:error.message})
-    }
-
-   
-
-})
 
 postRouter.get("/",async(req,res)=>{
 
@@ -52,15 +38,17 @@ postRouter.patch("/update/:postID",async(req,res)=>{
 
     const {postID} = req.params
     const useridinUSERDOC=req.body.userID
+    // const {...updatedData} = req.body
 
     try {
         const post = await PostModel.findOne({_id:postID})
         const useridinPOSTDOC = post.userID
 
+        console.log(useridinUSERDOC,useridinPOSTDOC)
         if(useridinUSERDOC == useridinPOSTDOC)
         {
             await PostModel.findByIdAndUpdate({_id:postID},req.body)
-            res.json({mesg:`${post.title} has been updated`})
+            res.json({mesg:`${post.FirstName}'s details has been updated`})
         }
         else
         {
@@ -70,10 +58,6 @@ postRouter.patch("/update/:postID",async(req,res)=>{
     } catch (error) {
         res.json({error:error.message})
     }
-
-    
-
-    
 
 })
 postRouter.delete("/delete/:postID",async(req,res)=>{
@@ -85,10 +69,11 @@ postRouter.delete("/delete/:postID",async(req,res)=>{
         const post = await PostModel.findOne({_id:postID})
         const useridinPOSTDOC = post.userID
 
+        console.log(useridinUSERDOC,useridinPOSTDOC)
         if(useridinUSERDOC == useridinPOSTDOC)
         {
             await PostModel.findByIdAndDelete({_id:postID},req.body)
-            res.json({mesg:`${post.title} has been deleted`})
+            res.json({mesg:`${post.FirstName}'s details has been deleted`})
         }
         else
         {

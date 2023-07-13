@@ -4,10 +4,11 @@ const mongoose = require("mongoose")
 
 const postSchema = mongoose.Schema({
 
-title: String,
-body : String,
-device : String , enum:["Laptop", "Tablet", "Mobile"],
-no_of_comments: Number,
+FirstName:String,
+LastName:String,
+Email:String,
+Department:String, 
+Salary:Number,
 userID:String,
 user:String
  

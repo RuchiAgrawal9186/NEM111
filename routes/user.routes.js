@@ -7,7 +7,7 @@ const jwt = require("jsonwebtoken")
 
 userRouter.post("/register",async(req,res)=>{
  // 1) get data from body
-    const {name,email,pass,gender,age,city,is_married} = req.body
+    const {email,pass,confirm_pass} = req.body
     try
     {
 
@@ -21,19 +21,31 @@ userRouter.post("/register",async(req,res)=>{
         else
         {
 
-    bcrypt.hash(pass,5,async(err,hash)=>{
-        if(err)
-        {
-          res.json({err:err.message})
-        }
-        else
-        {
-          const user = new UserModel({name,email,pass:hash,gender,age,city,is_married})
-          await user.save()
-          res.json({msg:"user is registered" , user:req.body})
-        }
-  
-     })
+            if (pass != confirm_pass) {
+                console.log(pass,confirm_pass)
+                return res.status(400).json({ error: 'Passwords and confirm password do not match' });
+              }
+             else
+             {
+
+                bcrypt.hash(pass,5,async(err,hash)=>{
+                    if(err)
+                    {
+                      res.json({err:err.message})
+                    }
+                    else
+                    {
+                            const user = new UserModel({email,pass:hash})
+                            await user.save()
+                            res.json({msg:"user is registered" , user:req.body})   
+                     
+                    }
+              
+                 })
+
+             } 
+
+    
 
     }
           
@@ -56,7 +68,7 @@ userRouter.post("/login",async(req,res)=>{
             bcrypt.compare(pass,user.pass,(err,result)=>{
                 if(result)
                 {
-                    let token = jwt.sign({userID:user._id,user:user.name},process.env.secrete)
+                    let token = jwt.sign({userID:user._id,user:user.email},process.env.secrete)
 
                     res.json({mesg:"login successfull", token:token})
                 }
