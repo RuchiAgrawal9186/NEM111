@@ -4,11 +4,11 @@ const mongoose = require("mongoose")
 
 const postSchema = mongoose.Schema({
 
-FirstName:String,
-LastName:String,
-Email:String,
-Department:String, 
-Salary:Number,
+firstname:String,
+lastname:String,
+email:String,
+department:String, 
+salary:Number,
 userID:String,
 user:String
  
